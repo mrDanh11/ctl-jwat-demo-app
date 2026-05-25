@@ -11,12 +11,17 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post('login')
   @HttpCode(200)
@@ -31,7 +36,21 @@ export class AuthController {
       sameSite: 'lax',
       maxAge: 1000 * 60 * 3,
     });
-    return { message: 'Login success' };
+    const payload: any = this.jwtService.decode(result);
+
+    console.log(payload.exp);
+    const exp = payload.exp;
+
+    const expireDate = new Date(exp * 1000);
+    const expireDateInVn = expireDate.toLocaleString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+    });
+
+    return {
+      message: 'Login success',
+      expireDate: expireDateInVn,
+      exp,
+    };
   }
 
   @Post('logout')
