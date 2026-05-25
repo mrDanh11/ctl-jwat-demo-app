@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/useAuth";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -173,10 +174,7 @@ export function LoginForm({
           )}
 
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit(onSubmit)(e);
-            }}
+            onSubmit={handleSubmit(onSubmit)}
             noValidate
             className="space-y-4"
           >
@@ -252,12 +250,12 @@ export function LoginForm({
               </div>
               <FieldError message={errors.password?.message} />
               <div className="flex justify-end">
-                <a
+                <Link
                   href="/blank-page"
                   className="text-xs text-blue-600 hover:underline"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -280,17 +278,19 @@ export function LoginForm({
             {/* ── Submit button ── */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || isSubmitting}
               className={cn(
                 "w-full flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold tracking-wide transition",
                 "bg-blue-600 text-white",
-                loading
+                loading || isSubmitting
                   ? "opacity-70 cursor-not-allowed"
                   : "hover:bg-blue-700 active:bg-blue-800",
               )}
             >
-              {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-              {loading ? "Logging in..." : "Login"}
+              {(loading || isSubmitting) && (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              )}
+              {loading || isSubmitting ? "Logging in..." : "Login"}
             </button>
 
             {/* ── Divider ── */}
@@ -338,12 +338,12 @@ export function LoginForm({
           {/* Sign up */}
           <p className="text-center text-sm text-gray-500 mt-6">
             Don&apos;t have an account?{" "}
-            <a
+            <Link
               href="/blank-page"
               className="text-blue-600 font-medium hover:underline"
             >
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
       </div>
