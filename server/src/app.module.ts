@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { OauthModule } from './modules/oauth/oauth.module';
 
 @Module({
   imports: [
@@ -21,8 +22,6 @@ import { JwtModule } from '@nestjs/jwt';
         },
       }),
     }),
-
-    AuthModule,
 
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -43,6 +42,9 @@ import { JwtModule } from '@nestjs/jwt';
         // logging: true,
       }),
     }),
+
+    AuthModule,
+    OauthModule,
   ],
 
   controllers: [],
