@@ -10,6 +10,7 @@ export function useAuth() {
     setError(null);
     try {
       const response = await apiClient.login(email, password);
+      localStorage.setItem("token_exp", response.data.exp.toString());
       return response;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
@@ -24,6 +25,7 @@ export function useAuth() {
     setLoading(true);
     setError(null);
     try {
+      localStorage.removeItem("token_exp");
       const response = await apiClient.logout();
       return response;
     } catch (err) {
@@ -54,5 +56,12 @@ export function useAuth() {
     apiClient.loginWithGoogle();
   };
 
-  return { login, logout, getMe, loginWithGoogle, loading, error };
+  return {
+    login,
+    logout,
+    getMe,
+    loginWithGoogle,
+    loading,
+    error,
+  };
 }

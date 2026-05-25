@@ -1,11 +1,41 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/useAuth";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { logout, loading } = useAuth();
+
+  useEffect(() => {
+    const exp = localStorage.getItem("token_exp");
+
+    // There's no token expiration time, force logout
+    if (!exp) {
+      router.replace("/login");
+      return;
+    }
+
+    // Calculate remaining time until token expiration
+    const remainingTime = Number(exp) * 1000 - Date.now();
+
+    // Token has already expired, force logout
+    if (remainingTime <= 0) {
+      localStorage.removeItem("token_exp");
+      router.replace("/login");
+      return;
+    }
+
+    // Auto logout when token expires
+    const timeout = setTimeout(() => {
+      localStorage.removeItem("token_exp");
+      router.replace("/login");
+    }, remainingTime);
+
+    // Cleanup
+    return () => clearTimeout(timeout);
+  }, [router]);
 
   const handleLogout = async () => {
     try {
