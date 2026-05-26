@@ -1,15 +1,23 @@
 import { CONFIG } from "./config";
 
 export interface ApiResponse<T = any> {
-  message?: string;
-  data?: T;
-  statusCode?: number;
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: T;
+  errors: any;
+}
+
+export interface LoginResponse {
+  message: string;
+  expireDate: string;
+  exp: number;
 }
 
 class ApiClient {
   private baseUrl = CONFIG.API_URL;
 
-  async request<T = any>(
+  async request<T>(
     endpoint: string,
     options: RequestInit = {},
   ): Promise<ApiResponse<T>> {
@@ -40,7 +48,7 @@ class ApiClient {
 
   // Auth endpoints
   async login(email: string, password: string) {
-    return this.request("/auth/login", {
+    return this.request<LoginResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
