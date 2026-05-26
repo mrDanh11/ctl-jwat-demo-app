@@ -154,7 +154,7 @@ export function LoginForm({
           </div>
 
           {/* ── Server error banner ── */}
-          {error && (
+          {/* {error && (
             <div className="mb-5 flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 animate-in fade-in slide-in-from-top-1 duration-200">
               <svg
                 className="mt-0.5 h-4 w-4 shrink-0"
@@ -171,7 +171,7 @@ export function LoginForm({
               </svg>
               <span>Invalid email or password</span>
             </div>
-          )}
+          )} */}
 
           <form
             onSubmit={handleSubmit(onSubmit)}
