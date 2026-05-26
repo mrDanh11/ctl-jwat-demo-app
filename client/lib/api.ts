@@ -37,7 +37,8 @@ class ApiClient {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || `HTTP Error: ${response.status}`);
+        console.log("API Error:", response.status);
+        throw new Error(data.message || "Invalid email or password");
       }
 
       return data;
