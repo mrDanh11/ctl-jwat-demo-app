@@ -22,7 +22,7 @@ export class AuthService {
     }
     const payload = { id: user.id, fullName: user.fullName };
     const token = await this.jwtService.signAsync(payload);
-
+    
     return token;
   }
 
